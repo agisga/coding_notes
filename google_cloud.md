@@ -130,6 +130,12 @@ easy_install -U pip
 pip3 install --upgrade tensorflow-gpu # for Python 3.n and GPU
 ```
 
+* To get rid of some warnings, I had to run for `six` and for a couple other packages:
+
+```
+pip3 install --upgrade six
+```
+
 #### Testing the TensorFlow-GPU setup
 
 * TensorFlow hello world:
