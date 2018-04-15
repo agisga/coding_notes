@@ -2,6 +2,8 @@
 
 ## Creating and configuration of a VM instance with GPU on Google Cloud
 
+*Since my Google Cloud interface is in German, some setting descriptions given in this section are in German (I believe figuring out their equivalent in another language should be easy).*
+
 * A free trial account has 0 GPU quota by default. To request a quota increase follow <https://cloud.google.com/compute/quotas>.
 
 * <https://cloud.google.com> -> Console -> Menu -> Compute Engine -> Create an instance:
@@ -38,7 +40,7 @@
 gcloud compute ssh INSTANCE_NAME
 ```
 
-__!!! Always remember to shutdown the instance after use !!!___
+__!!! Always remember to shutdown the instance after use !!!__
 
 ## Installing CUDA, cuDNN and TensorFlow
 
@@ -224,7 +226,14 @@ http://<External Static IP Address>:<Port Number>
 
 ```
 pip3 install keras
+pip3 install matplotlib
 ```
+
+etc.
+
+### Testing Keras
+
+E.g., run [this Jupyter Notebook](./Keras/MNIST_dense.ipynb).
 
 ## References
 
