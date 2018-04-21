@@ -235,6 +235,18 @@ etc.
 
 E.g., run [this Jupyter Notebook](./Keras/MNIST_dense.ipynb).
 
+## Usage
+
+Specifically for the setup described above.
+
+1. Turn on instance using the browser interface.
+2. SSH into the instance: `gcloud compute ssh INSTANCE_NAME`.
+3. Move files to the instance: `gcloud compute scp LOCAL_FILES INSTANCE_NAME:~/REMOTE_DIR/`.
+4. Activate the TensorFlow Virtualenv: `source ~/tensorflow/bin/activate`.
+5. Start Jupyter Notebook: `jupyter notebook --no-browser --port=5000`.
+6. Deactivate the TensorFlow Virtualenv: `deactivate`.
+7. Turn off the instance using the browser interface.
+
 ## References
 
 In all cases double check the information with the official docs, because it gets outdated quickly:
