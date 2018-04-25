@@ -6,20 +6,18 @@
 * The container becomes the unit for distributing and testing your application.
 * When you’re ready, deploy your application into your production environment, as a container or an orchestrated service. This works the same whether your production environment is a local data center, a cloud provider, or a hybrid of the two.
 
+### Resources
+
+* Docs: <https://docs.docker.com/>
+* Get started: <https://docs.docker.com/get-started/>
+* [A good presentation on Youtube](https://www.youtube.com/watch?v=oO8n3y23b6M), and the [associated source files](https://github.com/alysivji/talks/tree/master/data-science-workflows-using-docker-containers)
+
 ## Basic info
 
 ```
 ## List Docker CLI commands
 docker
 docker container --help
-
-## Display Docker version and info
-docker --version
-docker version
-docker info
-
-## Execute Docker image
-docker run hello-world
 
 ## List Docker images
 docker image ls
@@ -30,8 +28,6 @@ docker container ls --all
 docker container ls -aq
 ```
 
-* Docs: <https://docs.docker.com/>
-* Get started: <https://docs.docker.com/get-started/>
 
 ## Containers
 
@@ -54,102 +50,71 @@ docker push username/repository:tag            # Upload tagged image to registry
 docker run username/repository:tag                   # Run image from a registry
 ```
 
-### Creating an image and running a container
+### Permissions
+
+To avoid permission errors of all sorts, add your user to the `docker` group.
+
+### Example: A simple Miniconda based Docker container
+
+#### Creating an image and running a container
 
 A Dockerfile defines what goes on in the environment inside your container. Access to resources like networking interfaces and disk drives is virtualized inside this environment, which is isolated from the rest of your system. E.g., it can be included alongside a (web) app's code.
 
 1. Create an empty directory, and create `Dockerfile` inside of it:
 
     ```
-    # reference: https://hub.docker.com/_/ubuntu/
-    FROM ubuntu:16.04
+    # Use latest miniconda image as parent
+    # miniconda is python + conda installer
+    FROM continuumio/miniconda3
 
-    # Adds metadata to the image as a key value pair example LABEL version="1.0"
-    LABEL maintainer="Alexej Gossmann <www.github.com/agisga>"
+    # Meta-data
+    LABEL maintainer="Alexej Gossmann <www.github.com/agisga>" \
+          description="Docker Data Science Project\
+          Libraries inside image. Data/code mounted via shared folder.\
+          Easy to set up a new developmenet environment."
 
-    ##Set environment variables
-    ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+    # Set the working directory to /app
+    WORKDIR /app
 
-    RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates \
-        build-essential \
-        tmux \
-        curl \
-        git-core \
-        htop \
-        pkg-config \
-        python3-dev \
-        python3-pip \
-        python-setuptools \
-        python-virtualenv \
-        unzip \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    # Install a few libraries
+    RUN conda install jupyter -y && \
+        conda install numpy -y && \
+        conda install pandas -y && \
+        conda install scikit-learn && \
+        conda install scikit-image && \
+        conda clean -y -all
 
-    RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-        wget --quiet https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh -O ~/anaconda.sh && \
-        /bin/bash ~/anaconda.sh -b -p /opt/conda && \
-        rm ~/anaconda.sh
+    # Make port 8888 available to the world outside this container
+    EXPOSE 8888
 
-    ENV PATH /opt/conda/bin:$PATH
+    # Create mountpoint
+    VOLUME /app/data
 
-    RUN pip3 --no-cache-dir install --upgrade \
-            sklearn-pandas
-
-    # Open Ports for Jupyter
-    EXPOSE 5000
-
-    #Setup File System
-    RUN mkdir ds
-    ENV HOME=/ds
-    ENV SHELL=/bin/bash
-    # The VOLUME statements allow to mount externally mounted volumes.
-    # Here specified is the name of the folder within the docker container,
-    # which is shared with the host container. The host directory is
-    # declared at run time.
-    VOLUME /ds
-    WORKDIR /ds
-    # ADD allows to copy files from the host computer into the docker
-    # container when the docker container is run.
-    ADD run_jupyter.sh /ds/run_jupyter.sh
-    RUN chmod +x /ds/run_jupyter.sh
-
-    # The main purpose of a CMD is to provide defaults for an
-    # executing container. Docker containers shutdown if nothing
-    # is running - you can run jupyter notebook to keep the container up,
-    # or alternatively just run the bash shell (`CMD ["/bin/bash"]`).
-    CMD  ["./run_jupyter.sh"]
+    # Run jupyter when container launches
+    CMD ["jupyter", "notebook", "--ip='*'", "--port=8888", "--no-browser", "--allow-root"]
     ```
 
-    The above `Dockerfile` is based on <https://github.com/hamelsmu/Docker_Tutorial/blob/master/basic_tutorial/Dockerfile>.
+    The above `Dockerfile` is based on <https://github.com/alysivji/talks/blob/master/data-science-workflows-using-docker-containers/workflow2-data-science-project/Dockerfile>.
+    The `Dockerfile` may refer to some external files, which need to be in the specified host directory (usually the same directory which holds the Dockerfile).
 
-2. The `Dockerfile` may refer to some external files. Create them in the same directory. `run_jupyter.sh`:
-
-    ```
-    #! /bin/bash
-
-    jupyter notebook --no-browser --allow-root --port=5000 --NotebookApp.token='datascience'
-    ```
-
-3. Build the Docker image:
+2. Build the Docker image:
 
     ```
-    ## build an image
-    ## -t: name/tag the image
-    docker build -t datascience .
+    docker build -t <imagename> .
+    ## `.` for "current directory"
 
     ## check the built image
     docker image ls
     ```
 
-4. Create and run a container from the Docker image.
-Run the app (mapping your machine’s port 4000 to the container’s published port 80):
+3. Create and run a container from the Docker image. Run the app (mapping your machine’s port 9999 to the container’s published port 8888):
 
     ```
-    docker run -it --name CS_231n --net=host -v ~/github/my_CS231n/:/ds datascience
+    docker run -p 9999:8888 --name <containername> -v ~/dir/to/be/mounted/as/volume/inside/container/:/app/data <imagename>
+    ## `/app/data` is the destination directory (mount point) inside the container; it was also specified in the Dockerfile above.
 
+    ## Other options:
     ## -it -- run interactively
-    ## -p 4000:80 -- mapping your machine’s port 4000 to the container’s published port 80
     ## -d -- detached mode (run in the background)
 
     ## check running status, and see the abbreviated container ID
@@ -159,9 +124,14 @@ Run the app (mapping your machine’s port 4000 to the container’s published p
     docker container stop <container_ID>
     ```
 
-    Contrary to the docker message, the web app is served at `http://localhost:4000`.
+    The container will shut down as soon as it is not running a process anymore (or when manually stopped). To prevent shutdown, something like a bash shell or a jupyter notebook has to be running. Contrary to the docker message, the jupyter notebook (or web app, or whatever specified in `Dockerfile`) is served at `http://localhost:9999`.
 
-5. The jupyter notebook (or web app, or whatever specified in `Dockerfile`) is accessible from `http://localhost:5000/` with password `datascience`.
+4. To restart the container after it has shut down:
+
+    ```
+    docker start -ia <containername>
+    ## -a attaches to STDIN/STDOUT/STDERR
+    ```
 
 ### Interacting with the container
 
@@ -179,7 +149,7 @@ Run the app (mapping your machine’s port 4000 to the container’s published p
     docker commit <container_name> new_image_name:tag_name(optional)
     ```
 
-    If you plan to push to DockerHub, the use:
+    If you plan to push to DockerHub, then use:
 
     ```
     docker commit <container_name> <username>/<new_image_name>:<tag_name>
