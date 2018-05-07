@@ -1,6 +1,6 @@
 ## AUR
 
-### Manually install a package form the AUR
+### Manually install a package from the AUR
 
 1. Use `git clone` to acquire the build files.
 2. Verify that the PKGBUILD and accompanying files are not malicious or untrustworthy.
