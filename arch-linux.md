@@ -15,3 +15,32 @@
 2. Verify that the PKGBUILD and accompanying files are not malicious or untrustworthy.
 3. Run `makepkg`.
 4. Run `sudo pacman -U PACKAGE_NAME.pkg.tar`.
+
+
+## ABS
+
+<https://wiki.archlinux.org/index.php/ABS>
+
+### Use ABS to install newer/older/beta/devel version of a package
+
+#### Retrieve PKGBUILD source using Git
+
+You need the [asp](https://www.archlinux.org/packages/?name=asp) package installed.
+
+For example, this clones the git repository of the [anki](https://www.archlinux.org/packages/community-testing/x86_64/anki/) package:
+
+```
+asp checkout anki
+```
+
+You will find a directory with subdirectories `trunk` and `repos`:
+
+> PKGBUILD's and files found in repos are used in official builds. Files found in trunk are used by developers in preparation before being copied to repos.
+
+#### Build package
+
+1. Copy the directory containing the desired PKGBUILD (probably one of the subdirectories of `repos`) to a new location.
+2. Make modifications to the PKGBUILD if necessary.
+3. Create and install the new package with `makepkg` (see <https://wiki.archlinux.org/index.php/Makepkg#Usage>):
+    - Build the package: `makepkg --syncdeps`
+    - Install the built package, while cleaning up leftover files and folders: `makepkg --install --clean` (here `makepkg --install` is the same as `pacman -U pkgname-pkgver.pkg.tar.xz`)
