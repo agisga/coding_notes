@@ -1,3 +1,11 @@
+# Merging
+
+```
+git checkout master
+git merge new_branch
+git branch -d new_branch
+```
+
 # Rewriting history
 
 Detailed information here: <https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History>
