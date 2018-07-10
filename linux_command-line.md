@@ -196,9 +196,9 @@ $ epstopdf <filename>.eps <filename>.pdf
 ```shell
 $ pdftk 1.pdf 2.pdf cat output 12.pdf
 ```
-  - Save pages 1 and 2 of `1.pdf` to `new.pdf`:
+  - Save pages 1, 2, and 5 of `1.pdf` to `new.pdf`:
 ```shell
-$ pdftk A=1.pdf cat A1-2 output new.pdf
+$ pdftk A=1.pdf cat A1-2 A5 output new.pdf
 ```
   - Rotate all pages of `in.pdf` 90 deg. clockwise, and save as `out.pdf`:
 ```shell
