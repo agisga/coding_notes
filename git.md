@@ -68,3 +68,13 @@ and save.
   - `git reset --mixed <commit>`: the staging index is reset to match the specified commit, but the changes in the working directory files remain; `git reset` is equivalent to `git reset --mixed HEAD`.
   - `git reset --soft <commit>`: the commit history is reset to the specified commit, but the staging index and working directory are left untouched.
 * `git reset` is the "dangerous" method compared to the "safe" `git revert`: danger of permanently losing commits and working directory changes, although "orphaned" commits can be recovered with `git reflog` until they are permanently deleted by the git garbage collector (about every 30 days).
+
+# Removing things
+
+## git rm
+
+* Removes paths that are known to git either from the git index only, or from the working tree and the index.
+* `git rm <file>`: remove `<file>` from the working directory as well as from the git index.
+* `git rm --cached <file>`: unstage and remove the path `<file>` only from the git index.
+* Some other options: `-r` for recursive removal when a directory name is given.
+
