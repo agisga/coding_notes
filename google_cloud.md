@@ -237,7 +237,18 @@ E.g., run [this Jupyter Notebook](./Keras/MNIST_dense.ipynb).
 
 ## Usage
 
-Specifically for the setup described above.
+### Basics
+
+* Checking status: `gcloud compute instances list`
+* Starting an instance: `gcloud compute instances start <instance-name>`
+* Stopping an instance: `gcloud compute instances stop <instance-name>`
+* Stopping an instance at a later time: `at now +8 hours -f ~/gcloud_stop.sh`, where `gcloud_stop.sh` would be something like
+    ```
+    gcloud compute instances stop <instance-name>
+    echo "gcloud VM <instance-name> terminated at time $(date)" > gcloud_stop.txt
+    ```
+
+### Specifically for the setup described above.
 
 1. Turn on instance using the browser interface.
 2. SSH into the instance: `gcloud compute ssh INSTANCE_NAME`.
