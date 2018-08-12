@@ -78,3 +78,23 @@ and save.
 * `git rm --cached <file>`: unstage and remove the path `<file>` only from the git index.
 * Some other options: `-r` for recursive removal when a directory name is given.
 
+# Working with a fork
+
+## Configure a remote for a fork
+
+Basic instruction at <https://help.github.com/articles/configuring-a-remote-for-a-fork/>:
+
+```
+git remote -v
+git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git
+```
+
+## Syncing a fork with its remote
+
+Basic instructions at <https://help.github.com/articles/syncing-a-fork/>:
+
+```
+git fetch upstream
+git checkout <FORK_BRANCH_TO_SYNC>
+git merge upstream/master
+```
