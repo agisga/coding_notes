@@ -52,9 +52,9 @@ docker run username/repository:tag                   # Run image from a registry
 
 ### Permissions
 
-To avoid permission errors of all sorts, add your user to the `docker` group.
+To avoid permission errors of all sorts (including having to call `docker` with `sudo`), add your user to the `docker` group.
 
-### Example: A simple Miniconda based Docker container
+### Example 1: A simple Miniconda based Docker container
 
 #### Creating an image and running a container
 
@@ -133,6 +133,88 @@ A Dockerfile defines what goes on in the environment inside your container. Acce
     ## -a attaches to STDIN/STDOUT/STDERR
     ```
 
+### Example 2: Docker for deep learning with Tensorflow
+
+#### Prerequisites:
+
+1. Install the CUDA drivers. Tensorflow needs __CUDA 9.0__ (<https://www.tensorflow.org/install/gpu>). Instructions how to install CUDA 9.0 on Ubuntu 18.04 can be found here: <https://gist.github.com/Mahedi-61/2a2f1579d4271717d421065168ce6a73> (make sure to install the correct nvidia drivers).
+2. [Install nvidia-docker.](https://github.com/NVIDIA/nvidia-docker/) Verify the installation with
+
+    ```
+    docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
+    ```
+
+#### Install Tensorflow docker
+
+The following is based on <https://www.tensorflow.org/install/docker>.
+
+**Download the TensorFlow Docker image**
+
+For example:
+
+```
+docker pull tensorflow/tensorflow  # latest stable CPU release
+docker pull tensorflow/tensorflow:latest-gpu  # latest release w/ GPU support
+docker pull tensorflow/tensorflow:nightly-devel-gpu  # nightly dev release w/ GPU support
+docker pull tensorflow/tensorflow:1.9.0-gpu-py3  # release tagged 1.9.0 with GPU and Python 3 support
+```
+
+However, the official tensorflow docker images may not run on older hardware; see below.
+
+**Using TensorFlow Docker with an older version of TensorFlow**
+
+TensorFlow version >=1.5 is compiled with AVX. Many old CPUs don't support AVX; check if you CPU has AVX support with (empty output means no support):
+
+```
+cat /proc/cpuinfo | grep avx
+```
+
+A workaround is to build TensorFlow from source, as shown below.
+
+**Build TensorFlow from source**
+
+Download and run a TensorFlow development Docker image:
+
+```
+docker pull tensorflow/tensorflow:1.9.0-devel-gpu-py3
+docker run --runtime=nvidia -it -w /tensorflow -v $PWD:/mnt -e HOST_PERMS="$(id -u):$(id -g)" \
+    tensorflow/tensorflow:1.9.0-devel-gpu-py3 bash
+```
+
+Then, within the container's virtual environment, build the TensorFlow package with GPU support:
+
+```
+./configure  # answer prompts or use defaults
+bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+./bazel-bin/tensorflow/tools/pip_package/build_pip_package /mnt
+chown $HOST_PERMS /mnt/tensorflow-1.9.0-cp35-cp35m-linux_x86_64.whl
+```
+
+Install and verify the package within the container:
+
+```
+pip uninstall tensorflow
+pip install /mnt/tensorflow-1.9.0-cp35-cp35m-linux_x86_64.whl
+cd /tmp  # don't import from source directory
+python -c "import tensorflow as tf; print(tf.contrib.eager.num_gpus())"
+```
+
+
+To restart the container after it has shut down:
+
+```
+docker start -ia <containername>
+```
+
+**Test the TensorFlow Docker image**
+
+```
+docker run --runtime=nvidia -it tensorflow/tensorflow:1.9.0-devel-gpu-py3 bash
+docker run --runtime=nvidia -u $(id -u):$(id -g) -v $(pwd):/test -it tf
+```
+
+> Note for new Docker users: the `-v` and `-u` flags share directories between the Docker container and your machine, and very important. Without `-v`, your work will be wiped once the container quits, and without `-u`, files created by the container will have the wrong file permissions on your host machine.
+
 ### Interacting with the container
 
 * Attach a new terminal session to the container:
@@ -158,3 +240,8 @@ A Dockerfile defines what goes on in the environment inside your container. Acce
 ### Pushing images to DockerHub
 
 TODO.
+
+## Troubleshooting
+
+* **Docker containers have no internet access:** Follow this StackOverflow answer <https://stackoverflow.com/a/45644890> (hardcoding the DNS in the docker `daemon.json` has helped me in the past).
+
