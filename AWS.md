@@ -71,5 +71,7 @@ ssh -i ~/mykeypair.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1
 
 ## Create a large volume for data
 
+One can create a separate EBS volume and attach it to individual instances. However, the volume needs to be in the same region and subregion as the instance.
+
 * Create a volume under EBS.
-* Attach it to instances when new instances are created.
+* Attach it to instances when new instances are created (right click on the volume to attach, then mount in the instance; see <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html>).
