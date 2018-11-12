@@ -247,6 +247,7 @@ E.g., run [this Jupyter Notebook](./Keras/MNIST_dense.ipynb).
     gcloud compute instances stop <instance-name>
     echo "gcloud VM <instance-name> terminated at time $(date)" > gcloud_stop.txt
     ```
+* SSH into an instance: `gcloud compute ssh <instance-name>`
 
 ### Specifically for the setup described above.
 
@@ -256,7 +257,7 @@ E.g., run [this Jupyter Notebook](./Keras/MNIST_dense.ipynb).
 4. Activate the TensorFlow Virtualenv: `source ~/tensorflow/bin/activate`.
 5. Start Jupyter Notebook: `jupyter notebook --no-browser --port=5000` (to open the notebook in your local browser you need to you the right IP, which for example can be found through the online interface, or via `gcloud compute instances list`).
 6. Deactivate the TensorFlow Virtualenv: `deactivate`.
-7. Turn off the instance using the browser interface (or `gcloud compute instances start INSTANCE_NAME`).
+7. Turn off the instance using the browser interface (or `gcloud compute instances stop INSTANCE_NAME`).
 
 ## References
 
@@ -266,3 +267,134 @@ In all cases double check the information with the official docs, because it get
 * [Running Jupyter Notebook on Google Cloud Platform in 15 min](https://towardsdatascience.com/running-jupyter-notebook-in-google-cloud-platform-in-15-min-61e16da34d52) - Jupyter Notebook setup.
 * [Настраиваем VM Instance Google Cloud для задач машинного обучения](https://habrahabr.ru/post/341446/) - decent short guide, but somewhat incomplete.
 * [Using a GPU & TensorFlow on Google Cloud Platform](https://medium.com/google-cloud/using-a-gpu-tensorflow-on-google-cloud-platform-1a2458f42b0) - a great but slightly outdated summary of the CUDA, cuDNN, and TensorFlow setup.
+
+# Setting up a Google Cloud VM running PyTorch in a Jupyter Notebook
+
+__The instructions below don't quite work...__
+
+## Creating and configuration of a VM instance with GPU on Google Cloud
+
+See above.
+
+## Install CUDA
+
+See above.
+
+## Install Docker
+
+See the official Docker docs.
+
+## Install Nvidia Docker.
+
+Follow the official instructions at <https://github.com/NVIDIA/nvidia-docker/> to install nvidia-docker2.
+
+Test nvidia-smi with the latest official CUDA image
+
+```
+docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
+```
+
+## Create a Docker image for a Jupyter Notebook with PyTorch
+
+The following Dockerfile is partially based on <https://github.com/anibali/docker-pytorch/blob/master/cuda-9.0/Dockerfile>:
+
+```
+FROM nvidia/cuda:9.0-base-ubuntu16.04
+
+# Install some basic utilities
+RUN apt-get update && apt-get install -y \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV PATH /opt/conda/bin:$PATH
+
+RUN mkdir /workspace
+WORKDIR /workspace
+
+RUN apt-get update --fix-missing && apt-get install -y \
+    sudo \
+    wget \
+    bzip2 \
+    ca-certificates \
+    libglib2.0-0 \
+    libxext6 \
+    libsm6 \
+    libxrender1 \
+    libx11-6 \
+    git \
+    mercurial \
+    subversion \
+    curl \
+    grep \
+    sed \
+    dpkg && \
+    apt-get clean
+
+RUN wget --quiet https://repo.anaconda.com/archive/Anaconda2-5.3.0-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
+    rm ~/anaconda.sh && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc
+
+RUN apt-get update && apt-get install -y libgtk2.0-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    /opt/conda/bin/conda install jupyter -y && \
+    /opt/conda/bin/conda install -c menpo opencv3 -y && \
+    /opt/conda/bin/conda install numpy pandas scikit-learn matplotlib seaborn pyyaml h5py -y
+
+# CUDA 9.0-specific steps
+RUN /opt/conda/bin/conda install -y -c pytorch \
+    cuda90=1.0 \
+    magma-cuda90=2.3.0 \
+    "pytorch=0.4.1=py36_cuda9.0.176_cudnn7.1.2_1" \
+    torchvision=0.2.1 \
+ && /opt/conda/bin/conda clean -ya
+
+# Make port 8888 available to the world outside this container
+EXPOSE 8888
+
+# Create mountpoint
+VOLUME /workspace/mnt
+```
+
+Put the Dockerfile (name it `Dockerfile`) into a directory of choice. Then go to that directory, and build an image:
+
+```
+docker build -t pytorch .
+```
+
+## Create a Docker container
+
+
+Run with (based on <https://github.com/anibali/docker-pytorch>):
+
+```
+docker run -it \
+  --runtime=nvidia --ipc=host \
+  -p 8888:5000 \
+  --user="$(id -u):$(id -g)" \
+  --volume=/path/to/project/directory:/workspace/mnt \
+  --name pytorch-project \
+  pytorch:latest
+```
+
+(port 5000 in the VM needs to be assigned to port 8888 in the container; see <https://stackoverflow.com/questions/47335731/running-jupyter-notebook-in-docker-image-on-google-cloud>)
+
+Access the notebook from your local machine:
+
+```
+TODO
+```
+
+To restart the container after it has shut down:
+
+```
+docker start -ia pytorch-project
+```
+
+Attach a new terminal session to the running container:
+
+```
+docker exec -it pytorch-project bash
+```
