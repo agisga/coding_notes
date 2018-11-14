@@ -31,6 +31,13 @@ Partially based on <https://www.youtube.com/watch?v=8rjRfW4JM2I>.
     * For regular instance: Select (check prices) -> Continue (pick `p2.xlarge`), Configure Instance Details, Add Storage, Configure Security Group -> Review and Launch -> Launch.
     * For spot instance: select security group and keys.
 
+### Keep your data with spot instances
+
+* Choose to terminate the EBS volume associated with the instance when the instance is terminated.
+* To keep your data, regularly save a snapshot image of the instance while it's running (see below on how to).
+* Create new spot instances based on the last saved snapshot.
+* For code backups, push to GitHub; no need to save new snapshot images of the instance.
+
 ## Connect to the instance
 
 Based on <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html> and <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html>
@@ -52,6 +59,7 @@ ssh -i my-key-pair.pem ubuntu@<Your instance DNS>
 
 ```
 source activate python3
+# or something other than python3, see README for other options
 jupyter notebook
 ```
 
@@ -68,6 +76,17 @@ ssh -i ~/mykeypair.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1
 1. In the EC2 interface right-click on the instance and "create image"; images appear under "Images" -> "AMI".
 2. Terminate instance.
 3. Start a new instance from the saved image.
+
+### To delete an AMI image and storage volume snapshot
+
+<https://serverfault.com/questions/436648/how-to-delete-ec2-ami>
+
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation bar, verify your region.
+3. In the navigation panel, click AMIs.
+4. Select the AMI, click Actions, and then click Deregister. When prompted for confirmation, click Continue.
+5. In the navigation pane, click Snapshots.
+6. Select the snapshot, click Actions, and then click Delete. When prompted for confirmation, click Yes, Delete.
 
 ## Create a large volume for data
 
