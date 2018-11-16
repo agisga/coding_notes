@@ -17,7 +17,7 @@ Partially based on <https://www.youtube.com/watch?v=8rjRfW4JM2I>.
 * Basic info: <https://aws.amazon.com/marketplace/pp/B077GF11NF>
 * Walk-through with screenshots: <https://aws.amazon.com/blogs/machine-learning/get-started-with-deep-learning-using-the-aws-deep-learning-ami/>
 * How to use: <https://docs.aws.amazon.com/dlami/latest/devguide/tutorial-conda.html>
-* p2.xlarge seems like a good choice (0.9$ / hour, 1x NVidia K80)
+* p2.xlarge seems like a good choice (0.9$ / hour, 1x NVidia K80), or c4.xlarge if no GPU needed
 
 ## Create and launch an instance
 
@@ -28,7 +28,7 @@ Partially based on <https://www.youtube.com/watch?v=8rjRfW4JM2I>.
 4. Choose "AWS Marketplace" for regular instances, or "Search AMI" for spot instances.
 5. Search for "Deep Learning AMI (Ubuntu)".
 6. Configure the instance:
-    * For regular instance: Select (check prices) -> Continue (pick `p2.xlarge`), Configure Instance Details, Add Storage, Configure Security Group -> Review and Launch -> Launch.
+    * For regular instance: Select (check prices) -> Continue (pick `p2.xlarge` for GPU, or `c4.xlarge` if no GPU needed), Configure Instance Details, Add Storage, Configure Security Group -> Review and Launch -> Launch.
     * For spot instance: select security group and keys.
 
 ### Keep your data with spot instances
@@ -59,7 +59,7 @@ ssh -i my-key-pair.pem ubuntu@<Your instance DNS>
 
 ```
 source activate python3
-# or something other than python3, see README for other options
+# or something other than python3, see README for other options, e.g., tensorflow_p36
 jupyter notebook
 ```
 
