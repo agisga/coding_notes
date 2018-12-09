@@ -44,3 +44,19 @@ You will find a directory with subdirectories `trunk` and `repos`:
 3. Create and install the new package with `makepkg` (see <https://wiki.archlinux.org/index.php/Makepkg#Usage>):
     - Build the package: `makepkg --syncdeps`
     - Install the built package, while cleaning up leftover files and folders: `makepkg --install --clean` (here `makepkg --install` is the same as `pacman -U pkgname-pkgver.pkg.tar.xz`)
+
+## Pacman
+
+### Cleaning the package cache
+
+<https://wiki.archlinux.org/index.php/pacman#Cleaning_the_package_cache>
+
+To discard unused packages weekly *enable* and *start* `paccache.timer`:
+
+```
+$ systemctl enable paccache.timer
+Created symlink /etc/systemd/system/timers.target.wants/paccache.timer → /usr/lib/systemd/system/paccache.timer.
+$ systemctl start paccache.timer
+```
+
+As far as I can tell, it will run `paccache -r` on a weekly basis, which deletes all cached versions of installed and uninstalled packages, except for the most recent 3.
