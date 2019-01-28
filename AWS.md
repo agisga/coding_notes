@@ -17,7 +17,7 @@ Partially based on <https://www.youtube.com/watch?v=8rjRfW4JM2I>.
 * Basic info: <https://aws.amazon.com/marketplace/pp/B077GF11NF>
 * Walk-through with screenshots: <https://aws.amazon.com/blogs/machine-learning/get-started-with-deep-learning-using-the-aws-deep-learning-ami/>
 * How to use: <https://docs.aws.amazon.com/dlami/latest/devguide/tutorial-conda.html>
-* p2.xlarge seems like a good choice (0.9$ / hour, 1x NVidia K80), or c4.xlarge if no GPU needed
+* p2.xlarge seems like a good choice (0.9$ / hour, 1x NVidia K80), or c4.xlarge, r4.large, or r4.xlarge (check price) if no GPU needed
 
 ## Create and launch an instance
 
@@ -26,9 +26,9 @@ Partially based on <https://www.youtube.com/watch?v=8rjRfW4JM2I>.
 2. Change your region (top right) if it's not the correct region.
 3. Choose "Launch instance", or "Spot Requests" for spot instance.
 4. Choose "AWS Marketplace" for regular instances, or "Search AMI" for spot instances.
-5. Search for "Deep Learning AMI (Ubuntu)".
+5. Search for "Deep Learning AMI (Ubuntu)" under "Amazon AMIs".
 6. Configure the instance:
-    * For regular instance: Select (check prices) -> Continue (pick `p2.xlarge` for GPU, or `c4.xlarge` if no GPU needed), Configure Instance Details, Add Storage, Configure Security Group -> Review and Launch -> Launch.
+    * For regular instance: Select (check prices) -> Continue (for example, pick `p2.xlarge` for GPU, or `c4.xlarge`, r4.large, or r4.xlarge if no GPU needed), Configure Instance Details, Add Storage, Configure Security Group -> Review and Launch -> Launch.
     * For spot instance: select security group and keys.
 
 ### Keep your data with spot instances
@@ -55,6 +55,12 @@ ssh -i my-key-pair.pem ubuntu@<Your instance DNS>
 
 ### Jupyter
 
+* Open a tunnel between your client and the remote EC2 instance:
+
+```
+ssh -i ~/mykeypair.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1.amazonaws.com
+```
+
 * Once connected, you can start a jupyter notebook with:
 
 ```
@@ -63,13 +69,7 @@ source activate python3
 jupyter notebook
 ```
 
-* Open a tunnel between your client and the remote EC2 instance:
-
-```
-ssh -i ~/mykeypair.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1.amazonaws.com
-```
-
-* Now you can access the Jupyter notebook server at `https://127.0.0.1:8157` (or `http`?).
+* Now you can access the Jupyter notebook server at `http://127.0.0.1:8157`.
 
 ## Keep an image to start another instance in the future
 
