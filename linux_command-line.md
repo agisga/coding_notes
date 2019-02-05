@@ -284,7 +284,7 @@ $ groups <user>
 * Add / Remove a group: `groupadd` / `groupdel`
 * Add a user to a group:
 ```shell
-$ groupmod -G <group> <user>
+$ usermod -a -G <group> <user>
 ```
 * Grant root privileges to user temporarily:
 ```shell
