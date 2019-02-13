@@ -69,6 +69,10 @@ and save.
   - `git reset --soft <commit>`: the commit history is reset to the specified commit, but the staging index and working directory are left untouched.
 * `git reset` is the "dangerous" method compared to the "safe" `git revert`: danger of permanently losing commits and working directory changes, although "orphaned" commits can be recovered with `git reflog` until they are permanently deleted by the git garbage collector (about every 30 days).
 
+## Hard reset of a single file
+
+* `git checkout HEAD -- my-file.txt`: update both the working copy of `my-file.txt` and its state in the index with that from HEAD. Here `--` basically means: "treat every argument after this point as a file name".
+
 # Removing things
 
 ## git rm
