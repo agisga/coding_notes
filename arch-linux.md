@@ -1,3 +1,7 @@
+## Random useful stuff
+
+* Bluntly restart networking: `sudo systemctl restart NetworkManager`
+
 ## AUR
 
 ### Manually install a package from the AUR
