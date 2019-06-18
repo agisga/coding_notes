@@ -224,6 +224,11 @@ docker run --runtime=nvidia -u $(id -u):$(id -g) -v $(pwd):/test -it tf
     ```
 
     This specifies the container name (`container1`), and the application we want to run (`bash`).
+    As root:
+
+    ```
+    docker exec -it -u 0 container1 bash
+    ```
 
 * Attach a new terminal session to the container _running as root_:
 
