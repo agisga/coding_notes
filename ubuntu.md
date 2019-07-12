@@ -6,16 +6,15 @@
 
 ```
 sudo apt update
-sudo apt install curl \
+sudo apt install \
+  curl \
   git \
   software-properties-common \
   libcurl4-openssl-dev \
   libssl-dev \
   apt-transport-https \
   ca-certificates \
-  curl \
   gnupg-agent \
-  software-properties-common
 ```
 
 ### Some useful software applications form the Ubuntu repos
