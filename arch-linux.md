@@ -10,7 +10,7 @@ __Partitions__
 
 __Encryption (entire system)__
 
-* Simplest option seems [LUKS on a partition](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition) to encryption the entire `/` partition.
+* Simplest option seems [LUKS on a partition](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition) to encrypt the entire `/` partition.
 * Configure the boot loader (see below).
 
 
@@ -20,9 +20,8 @@ __Boot loader__
     ```
     pacman -S intel-ucode
     ```
-* Use `systemd-boot`.
-On systemdboot Update one needs to run manually bootctl update...
-* `/boot/loader/entries/arch.conf` file that allows to unlock the encrypted `/` at boot, and that supports hibernation:
+* Use `systemd-boot` (follow the wiki carefully).
+* Here is my `/boot/loader/entries/arch.conf` file that allows to unlock the encrypted `/` at boot, and that supports hibernation:
     ```
     title   Arch Linux
     linux   /vmlinuz-linux
@@ -30,7 +29,7 @@ On systemdboot Update one needs to run manually bootctl update...
     initrd    /initramfs-linux.img
     options   cryptdevice=UUID=<fill in uuid of /dev/sda2>:cryptroot root=/dev/mapper/cryptroot resume=/dev/mapper/cryptroot resume_offset=<fill in offset>
     ```
-    Use `blkid` to figure out uuid of `/dev/sda2`.
+    Use `blkid` to figure out UUID of `/dev/sda2`.
     For `resume_offset` see ArchWiki.
 
 __Other__
