@@ -1,3 +1,50 @@
+## Installation
+
+Follow the installation guide from ArchWiki. Some noteworthy details on my last install are given below.
+
+__Partitions__
+
+* Use GPT.
+* Create only two partitions: a 512M EFI System Partition (ESP) which should be mounted as `/boot`, and a `/` partition. For example, `/dev/sda1` and `/dev/sda2`.
+* Use `fdisk` to partition. Use `t` command in `fdisk` to set partition type -- "EFI system" and "Linux root (x86-64)" respectively.
+
+__Encryption (entire system)__
+
+* Simplest option seems [LUKS on a partition](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition) to encryption the entire `/` partition.
+* Configure the boot loader (see below).
+
+
+__Boot loader__
+
+* Before working on the boot loader do
+    ```
+    pacman -S intel-ucode
+    ```
+* Use `systemd-boot`.
+On systemdboot Update one needs to run manually bootctl update...
+* `/boot/loader/entries/arch.conf` file that allows to unlock the encrypted `/` at boot, and that supports hibernation:
+    ```
+    title   Arch Linux
+    linux   /vmlinuz-linux
+    initrd    /intel-ucode.img
+    initrd    /initramfs-linux.img
+    options   cryptdevice=UUID=<fill in uuid of /dev/sda2>:cryptroot root=/dev/mapper/cryptroot resume=/dev/mapper/cryptroot resume_offset=<fill in offset>
+    ```
+    Use `blkid` to figure out uuid of `/dev/sda2`.
+    For `resume_offset` see ArchWiki.
+
+__Other__
+
+* Install `base-devel linux-headers linux-lts linux-lts-headers networkmanager wireless_tools wpa_supplicant git` (network related packages needed to not be left without the possibility to configure internet access after reboot).
+* Run `mkinitcpio -p linux-lts` (in addition to `mkinitcpio -p linux`) and create `/boot/loader/entries/arch-lts.conf` (in addition to `arch.conf`) if `lts` kernel is installed.
+* Run `systemctl enable NetworkManager`.
+* Create swap file. See above and on ArchWiki about what to add for `resume` and `resume_offset`, and how to edit `mkinitcpio.conf`.
+
+__Gnome__
+
+* Pick individual packages from `gnome-extra`. It's mostly useless.
+
+
 ## Random useful stuff
 
 * Bluntly restart networking: `sudo systemctl restart NetworkManager`
