@@ -61,6 +61,7 @@ __Gnome__
 
 ### Manually update a package from the AUR
 
+0. Check for and inspect new changes by running `git fetch` and `git diff origin/master`.
 1. Pull updates to the build files with `git pull`.
 2. Verify that the PKGBUILD and accompanying files are not malicious or untrustworthy.
 3. Run `makepkg`.
