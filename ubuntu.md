@@ -15,12 +15,14 @@ sudo apt install \
   apt-transport-https \
   ca-certificates \
   gnupg-agent \
+  libxml2-dev
 ```
 
-### Some useful software applications form the Ubuntu repos
+### Some useful software applications from the Ubuntu repos
 
 ```
 sudo apt install chromium-browser
+sudo apt install gnome-tweak-tool
 ```
 
 ### Python
