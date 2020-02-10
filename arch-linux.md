@@ -6,12 +6,12 @@ __Partitions__
 
 * Use GPT.
 * Create only two partitions: a 512M EFI System Partition (ESP) which should be mounted as `/boot`, and a `/` partition. For example, `/dev/sda1` and `/dev/sda2`.
-* Use `fdisk` to partition. Use `t` command in `fdisk` to set partition type -- "EFI system" and "Linux root (x86-64)" respectively.
+* [Use `fdisk` to partition](https://wiki.archlinux.org/index.php/Fdisk#Create_a_partition_table_and_partitions). After you create a new partition with `n` use `t` command in `fdisk` to set partition type -- "EFI system" and "Linux root (x86-64)" respectively.
 
 __Encryption (entire system)__
 
 * Simplest option seems [LUKS on a partition](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition) to encrypt the entire `/` partition.
-* Configure the boot loader (see below).
+* Configure the boot loader (see below). This is done together with configuration of `mkinitcpio` etc. *after* the base system is installed and you are `chroot`ed into the new system.
 
 
 __Boot loader__
@@ -31,11 +31,12 @@ __Boot loader__
     ```
     Use `blkid` to figure out UUID of `/dev/sda2`.
     For `resume_offset` see ArchWiki.
+* Note: You need to run `mkinitcpio -P` *after* you edit `/etc/mkinicpio.conf`.
 
 __Other__
 
 * Install `base-devel linux-headers linux-lts linux-lts-headers networkmanager wireless_tools wpa_supplicant git` (network related packages needed to not be left without the possibility to configure internet access after reboot).
-* Run `mkinitcpio -p linux-lts` (in addition to `mkinitcpio -p linux`) and create `/boot/loader/entries/arch-lts.conf` (in addition to `arch.conf`) if `lts` kernel is installed.
+* Run `mkinitcpio -p linux-lts` (in addition to `mkinitcpio -p linux`) and create `/boot/loader/entries/arch-lts.conf` (in addition to `arch.conf`, see <https://bbs.archlinux.org/viewtopic.php?id=235116>) if `lts` kernel is installed.
 * Run `systemctl enable NetworkManager`.
 * Create swap file. See above and on ArchWiki about what to add for `resume` and `resume_offset`, and how to edit `mkinitcpio.conf`.
 
