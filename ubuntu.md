@@ -139,15 +139,23 @@ Partially based on <https://medium.com/@redowan/no-bullshit-guide-on-installing-
 
 ### Python
 
-I will go with the system `python3` and the regular `venv` for this configuration.
-```
-sudo apt install python3-pip python3-venv
-```
+#### Python installation and versions
 
 Not sure if any of these are actually needed (list copied from <https://illya13.github.io/RL/tutorial/2020/04/28/installing-pytorch-on-ubuntu-20.html>), but they may be required for PyTorch and related Python packages below:
 ```
 sudo apt install zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libffi-dev
 ```
+
+##### System Python
+
+A straightforward approach is to use the system `python3` with the regular `venv`.
+```
+sudo apt install python3-pip python3-venv
+```
+
+##### pyenv
+
+One can conveniently switch between different versions of Python on the same computer using `pyenv`. See my notes in [./python/pyenv.md](pyenv.md).
 
 #### PyTorch
 
