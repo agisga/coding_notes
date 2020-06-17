@@ -1,0 +1,135 @@
+#+TITLE: Hypermodern Python
+
+* Part 1 (https://cjolowicz.github.io/posts/hypermodern-python-01-setup/)
+
+- Use =pyenv= to install Python and manage python versions: https://github.com/pyenv/pyenv
+- Use =poetry= to set up your Python project: https://python-poetry.org/  
+  + =poetry= can be regarded as a successor for =setuptools=.
+  + install =poetry=, the initialize your project with =poetry init --no-interaction=.
+  + edit the generated file =pyproject.toml=; I believe it plays a similar role to =setup.py= which is used by =setuptools=.
+- Creating a package in =src= layout
+  #+BEGIN_SRC 
+    .
+    ├── pyproject.toml
+    └── src
+	└── mypackage
+	    └── __init__.py
+  #+END_SRC
+  + =__init__.py= should specify =__version__= but likely not contain any other information.
+- Managing virtual environments with Poetry:
+  + =poetry= manager virtual environments for you.
+  + for example, if you install the package with =poetry install=, then =poetry= will create a virtual environment dedicated to that project.
+  + you can use =poetry run python= to start a python REPL within the virtual environment.
+- Managing dependencies with Poetry:
+  + Dependencies can be installed into the virtual environment with =poetry add=, for example, =poetry add numpy=. It will automatically update =pyproject.toml=.
+  + To add a development dependency use, for example, =poetry add --dev pytest=.
+- /Cython and Poetry/: For how to use =poetry= with =Cython= see https://github.com/iamishalkin/cyrtd and https://github.com/python-poetry/poetry/issues/11
+ 
+* Part 2 (https://cjolowicz.github.io/posts/hypermodern-python-02-testing/)
+
+- Unit testing with pytest
+  + the directory structure is now:
+    #+BEGIN_SRC 
+	.
+    ├── src
+    └── tests
+	├── __init__.py
+	└── test_console.py
+    #+END_SRC
+  + the file =__init__.py= is empty and serves to declare the test suite as a package.
+  + use the =pytest.fixture= decorator to create test fixtures (note that fixtures created by =pytest.fixture= cannot be called as normal functions, see https://docs.pytest.org/en/stable/fixture.html).
+  + run your test suite with =poetry run pytest=.
+- Code coverage with =Coverage.py=
+  + =pytest-cov= integrates =Coverage.py= with =pytest=: =poetry add --dev coverage[toml] pytest-cov=
+  + you can configure =Coverage.py= from within =pyproject.toml=
+  + coverage reporting: =poetry run pytest --cov=
+- Test automation with Nox
+  + Automate testing in multiple testing environments
+  + =pip install --user --upgrade nox= However, much better to use [[https://github.com/pipxproject/pipx][pipx]] to install Nox.
+  + Nox is configured with a standard python file, e.g.:
+    #+BEGIN_SRC 
+    # noxfile.py
+    import nox
+
+    @nox.session(python=["3.8", "3.7"])
+    def tests(session):
+	session.run("poetry", "install", external=True)
+	session.run("pytest", "--cov")
+    #+END_SRC
+    + (this file defines a session named =tests=, which installs the project dependencies and runs the test suite. Poetry is not a part of the environment created by Nox, so we specify external to avoid warnings about external commands leaking into the isolated test environments.)
+    + Nox creates a virtual environment for each invocation, and you can speed it up with =nox -r= or alternatively =python -m nox -r= (the --reuse-existing-virtualenvs (-r) option).
+- Mocking with =pytest-mock=
+  + Replace parts of the tests with mock objects for speed.
+
+* Part 3 (https://cjolowicz.github.io/posts/hypermodern-python-03-linting/)
+
+- Linting with Flake8:
+  + can be configured to run through Nox, for example,
+    #+BEGIN_SRC 
+    # noxfile.py
+    locations = "src", "tests", "noxfile.py"
+
+    @nox.session(python=["3.8", "3.7"])
+    def lint(session):
+	args = session.posargs or locations
+	session.install("flake8")
+	session.run("flake8", *args)
+    #+END_SRC
+    + Configure Flake8 using the .flake8 configuration file, enabling all the built-in violation classes and setting the complexity limit:
+      #+BEGIN_SRC 
+    # .flake8
+    [flake8]
+    select = C,E,F,W
+    max-complexity = 10
+      #+END_SRC
+      + To run only a specific session from Nox use the =-s= option, for example: =nox -rs lint=
+- Code formatting with Black:
+  + Adding Black as a Nox session:
+    #+BEGIN_SRC 
+    # noxfile.py
+    @nox.session(python="3.8")
+    def black(session):
+	args = session.posargs or locations
+	session.install("black")
+	session.run("black", *args)
+    #+END_SRC
+  + Then you can reformat your code with =nox -rs black=.
+  + You should also add =flake8-black= to the linters:
+    #+BEGIN_SRC 
+    # noxfile.py
+@nox.session(python=["3.8", "3.7"])
+def lint(session):
+    args = session.posargs or locations
+    session.install("flake8", "flake8-black")
+    session.run("flake8", *args)
+    #+END_SRC
+    and configure =Flake8= to enable the =flake8-black= warnings, and to ignore warnings E203 (Whitespace before ‘:') and W503 (Line break before binary operator), and set the maximum line length to a more permissive value:
+    #+BEGIN_SRC 
+    # .flake8
+    [flake8]
+    select = BLK,C,E,F,W
+    ignore = E203,W503
+    max-line-length = 88
+    #+END_SRC
+- Checking imports with flake8-import-order:
+  + Edit the Nox lint session with =session.install("flake8", "flake8-black", "flake8-import-order")=, and enable import warning with =I= within =.flake8=
+  + Inform the plugin about package names which are considered local, for example in =.flake8=,
+    #+BEGIN_SRC 
+    application-import-names = my_python_package, tests
+    #+END_SRC
+  + You can also use the [[https://google.github.io/styleguide/pyguide.html?showone=Imports_formatting#313-imports-formatting][Google style guide]] for package ordering, in =.flake8=:
+    #+BEGIN_SRC 
+    import-order-style = google
+    #+END_SRC
+- Finding more bugs with [[https://github.com/PyCQA/flake8-bugbear][flake8-bugbear]]:
+  + Include ="flake8-bugbear"= in =noxfile.py=, enable warning with =B= in =.flake8=.
+- Identifying security issues with [[https://github.com/PyCQA/bandit][Bandit]]: (...) I probably don't need this.
+- Finding security vulnerabilities in dependencies with [[https://github.com/pyupio/safety][Safety]]: (...) I probably don't need this.
+- Managing dependencies in Nox sessions with Poetry: Shows how to use Poetry to install dependencies within the =noxfile.py=. Seems more trouble than it's worth...
+- Managing Git hooks with pre-commit: "Git provides hooks which allow you to run custom commands when important actions occur, such as a commit or push." (...)
+
+* Part 4 (https://cjolowicz.github.io/posts/hypermodern-python-04-typing/)
+
+I am skipping this part for now because typing in Python does not yet extend well to Numpy...
+
+* Part 5 (https://cjolowicz.github.io/posts/hypermodern-python-05-documentation/)
