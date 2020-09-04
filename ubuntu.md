@@ -2,6 +2,22 @@
 
 Last tested with Ubuntu 20.04.
 
+## Disable all automated power management functions
+
+Copied from <http://www.vassox.com/linux-general/ubuntu/disabling-ubuntu-suspend-power-management-features-from-the-command-line/>:
+
+> In some configurations, Ubuntu power conservation options are enabled by default.  For server machines this is something that can make the machine unavailable and is generally unsuitable for a server machine.  In a headless (non-GUI) server, these functions can be disabled as follows from the command line:
+
+Disabling power management functions:
+```
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
+Re-Enabling power management functions:
+```
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
 ## Essential software
 
 ### Some development tools from the Ubuntu repos
