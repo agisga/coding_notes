@@ -112,3 +112,14 @@ $ systemctl start paccache.timer
 ```
 
 As far as I can tell, it will run `paccache -r` on a weekly basis, which deletes all cached versions of installed and uninstalled packages, except for the most recent 3.
+
+### Sort the mirrorlist by speed
+
+Based on <https://wiki.archlinux.org/index.php/mirrors#Sorting_mirrors>:
+
+```
+sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+# uncomment appropriate lines in mirrorlist.pacnew
+su
+rankmirrors /etc/pacman.d/mirrorlist.pacnew > /etc/pacman.d/mirrorlist
+```
