@@ -33,7 +33,7 @@ sudo apt-get -y install cuda
 
 ### 2.1 Post-installation
 
-- The detailed post-installation instructions are found at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-- installation-actions>
+- The detailed post-installation instructions are found at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post--installation-actions>
 - In most cases the following will suffice:
     1. Add the following line to the end of the `~/.bashrc` file:
     ```
