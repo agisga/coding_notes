@@ -122,4 +122,5 @@ sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 # uncomment appropriate lines in mirrorlist.pacnew
 su
 rankmirrors /etc/pacman.d/mirrorlist.pacnew > /etc/pacman.d/mirrorlist
+sudo pacman -Syyu
 ```
