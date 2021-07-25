@@ -82,6 +82,17 @@ and save.
 * `git rm --cached <file>`: unstage and remove the path `<file>` only from the git index.
 * Some other options: `-r` for recursive removal when a directory name is given.
 
+# Untrack files in git
+
+See <http://source.kohlerville.com/2009/02/untrack-files-in-git/>.
+
+Simple way:
+
+1. `git rm --cached filename`
+2. add file to .gitignore
+
+Another way is: `git update-index --assume-unchanged [path]`
+
 # Working with a fork
 
 ## Configure a remote for a fork
