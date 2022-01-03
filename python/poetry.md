@@ -2,6 +2,8 @@
 
 - For basics (initialize project, create a virtual env with poetry, etc.) see https://github.com/agisga/coding_notes/blob/master/python/hypermodern_python.org
 
+## Mostly, what's needed to make poetry work for my setup at work
+
 - To install Poetry in a directory other than $HOME, follow the instructions at <https://python-poetry.org/docs/>:
   ```                                                                                                   
   curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py > get-poetry.py 
@@ -18,3 +20,13 @@
   ```
   /Users/allen.c/Library/Caches/pypoetry/virtualenvs/app-6aZ328yD-py3.8/bin/python -m pip install --upgrade pip
   ```
+
+## Mostly, what's needed to make poetry work for my Arch linux setup at home
+
+- Use the *pipx* installation method: <https://python-poetry.org/docs/#installing-with-pipx>
+
+- Sometimes you need use the `env use` command to tell Poetry which Python version to use for the current project (despite having `pyenv`.. not sure why...). See: <https://python-poetry.org/docs/managing-environments/#switching-between-environments>.
+    ```
+    poetry env use /full/path/to/python
+    ```
+
