@@ -23,7 +23,7 @@
 
 ## Mostly, what's needed to make poetry work for my Arch linux setup at home
 
-- Use the *pipx* installation method: <https://python-poetry.org/docs/#installing-with-pipx>
+- Use the *pipx* installation method: <https://python-poetry.org/docs/#installing-with-pipx> (although in the end I ended up using plain old `pip`; also may need to uninstall and re-install python versions with `pyenv`...).
 
 - Sometimes you need use the `env use` command to tell Poetry which Python version to use for the current project (despite having `pyenv`.. not sure why...). See: <https://python-poetry.org/docs/managing-environments/#switching-between-environments>.
     ```
