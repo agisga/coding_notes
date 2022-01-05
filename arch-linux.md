@@ -48,6 +48,9 @@ __Gnome__
 ## Random useful stuff
 
 * Bluntly restart networking: `sudo systemctl restart NetworkManager`
+* Disable laptop keyboard under Wayland (based on <https://unix.stackexchange.com/questions/381944/how-to-disable-internal-keyboard-on-fedora-26-wayland>):
+    1. `sudo libinput list-devices`, and identify what `/dev/input` device number the laptop keyboard corresponds to.
+    2. run something like `sudo evtest --grab /dev/input/event2` to "grab" the output from the keyboard so it's not passed on to any processes.
 
 ## AUR
 
