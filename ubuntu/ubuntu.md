@@ -55,6 +55,10 @@ Then find the IP using for example `ifconfig`.
 
 ### NVIDIA GPU drivers, CUDA Toolkit, cuDNN
 
+*The easiest option seems to be to follow the recipe given here line-by-line:* <https://www.tensorflow.org/install/gpu#ubuntu_1804_cuda_110>
+
+*Below are my instructions written in 2020.*
+
 Based on <https://illya13.github.io/RL/tutorial/2020/04/28/installing-pytorch-on-ubuntu-20.html>.
 This installs CUDA Toolkit and cuDNN manually. Alternatively, an installation with Anaconda may be much easier (it seems that Anaconda has packaged CUDA Toolkit as well as cuDNN, but I haven't tested it).
 
