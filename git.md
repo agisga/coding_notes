@@ -113,3 +113,7 @@ git fetch upstream
 git checkout <FORK_BRANCH_TO_SYNC>
 git merge upstream/master
 ```
+
+# Useful resources
+
+- <https://swcarpentry.github.io/git-novice/>
