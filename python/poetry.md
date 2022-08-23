@@ -21,6 +21,9 @@
   /Users/allen.c/Library/Caches/pypoetry/virtualenvs/app-6aZ328yD-py3.8/bin/python -m pip install --upgrade pip
   ```
 
+- To get information about Poetry's virtual environments use `poetry env info` or `poetry env list`.
+- To delete a virtual environment use `poetry env remove <my-env-id>`.
+
 ## Mostly, what's needed to make poetry work for my Arch linux setup at home
 
 - Use the *pipx* installation method: <https://python-poetry.org/docs/#installing-with-pipx> (although in the end I ended up using plain old `pip`; also may need to uninstall and re-install python versions with `pyenv`...).
