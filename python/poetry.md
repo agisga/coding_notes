@@ -24,6 +24,11 @@
 - To get information about Poetry's virtual environments use `poetry env info` or `poetry env list`.
 - To delete a virtual environment use `poetry env remove <my-env-id>`.
 
+- Due to the issue discussed in <https://github.com/python-poetry/poetry/issues/2692#issuecomment-1235683370>, may need to run poetry with
+  ```
+  PYTHON_KEYRING_BACKEND="keyring.backends.null.Keyring" poetry <...>
+  ```
+
 ## Mostly, what's needed to make poetry work for my Arch linux setup at home
 
 - Use the *pipx* installation method: <https://python-poetry.org/docs/#installing-with-pipx> (although in the end I ended up using plain old `pip`; also may need to uninstall and re-install python versions with `pyenv`...).
