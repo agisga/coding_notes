@@ -2,6 +2,15 @@
 
 - For basics (initialize project, create a virtual env with poetry, etc.) see https://github.com/agisga/coding_notes/blob/master/python/hypermodern_python.org
 
+## Poetry and Pyenv
+
+Poetry may not respect the python selected with pyenv. A workaround is (<https://github.com/python-poetry/poetry/issues/5252#issuecomment-1194889183>):
+```
+pyenv local 3.7.12  # for example
+poetry env use $(pyenv which python)
+poetry install
+```
+
 ## Mostly, what's needed to make poetry work for my setup at work
 
 - To install Poetry in a directory other than $HOME, follow the instructions at <https://python-poetry.org/docs/>:
