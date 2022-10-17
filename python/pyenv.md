@@ -59,4 +59,18 @@ Partially based on <https://pycon.switowski.com/02-packages/pyenv/>.
   pyenv deactivate
   ```
 
+## Some errors I had to deal with
 
+Problem:
+
+```
+ImportError: libpython3.7m.so.1.0: cannot open shared object file: No such file or directory
+```
+
+Solution:
+
+```
+env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.12
+```
+
+(I saw something similar here: <https://pyinstaller.org/en/stable/development/venv.html>))
