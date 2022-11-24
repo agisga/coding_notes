@@ -13,7 +13,7 @@ Likely this step can be skipped, but in some cases it may be necessary to remove
 - For Ubuntu 20.04 use <https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=deblocal>
 - This online tool also allows for the choice of many different environments and OSs to get specialized instructions.
 
-**To install CUDA 11.2.2 on Ubuntu 18.04 run the following commands in the terminal:**
+**For example, to install CUDA 11.2.2 on Ubuntu 18.04 run the following commands in the terminal:**
 
 ```
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
@@ -43,6 +43,8 @@ sudo apt-get -y install cuda
 
 ## 3. Install NVIDIA CUDA Toolkit:
 
+This actually replaces the previously installed `cuda` (as of 2022-11-24). So, I don't think it this step is actually needed...
+
 ```
 sudo apt install nvidia-cuda-toolkit
 ```
@@ -55,8 +57,8 @@ sudo apt install nvidia-cuda-toolkit
 
 ### 5. Install CUDNN
 
-- Download "cuDNN Library for Linux (x86_64)": <https://developer.nvidia.com/rdp/form/cudnn-download-survey>
-- Follow the procedure at <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-tar>
+- Easiest way seems to be: <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#package-manager-ubuntu-install>
+- Alternative way is to download "cuDNN Library for Linux (x86_64)": <https://developer.nvidia.com/rdp/form/cudnn-download-survey>. And then following the procedure at <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-tar>.
 
 ## Other resources
 
