@@ -66,6 +66,7 @@ See `./nvidia_cuda_cudnn_etc.md`.
 Not sure if any of these are actually needed (list copied from <https://illya13.github.io/RL/tutorial/2020/04/28/installing-pytorch-on-ubuntu-20.html>), but they may be required for PyTorch and related Python packages below:
 ```
 sudo apt install zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libffi-dev
+sudo apt install lzma liblzma-dev libbz2-dev
 ```
 
 ##### System Python
