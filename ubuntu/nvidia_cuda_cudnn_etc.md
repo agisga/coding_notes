@@ -1,33 +1,24 @@
-# NVIDIA CUDA 11, CUDA Toolkit, and cuDNN installation on Ubuntu 18.04 or 20.04
-
-**Note:** The following assumes that the NVIDIA GPU drivers are already installed and sufficiently up-to-date.
+# NVIDIA Drivers, CUDA, CUDA Toolkit, and cuDNN installation on Ubuntu 18.04 or 20.04
 
 ## 1. Old CUDA installations
 
-Likely this step can be skipped, but in some cases it may be necessary to remove old CUDA installations according to the instructions given at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#handle-uninstallation>
+Likely this step can be skipped, but in some cases it may be necessary to remove old CUDA installations according to the instructions given at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#handle-conflicting-installation-methods>. It may also be needed to remove the old cuda installation sources from apt.
 
-## 2. Install CUDA 11
+## 2. Install NVIDIA drivers, CUDA, and CUDA Toolkit
 
-- The detailed documentation is found at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html>
-- Below are the steps for Ubuntu 18.04.
-- For Ubuntu 20.04 use <https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=deblocal>
-- This online tool also allows for the choice of many different environments and OSs to get specialized instructions.
-
-**For example, to install CUDA 11.2.2 on Ubuntu 18.04 run the following commands in the terminal:**
+- Follow the installation instructions at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu>.
+- The required installation files should be downloaded from <https://developer.nvidia.com/cuda-downloads>, where you select the OS, architecture, and distribution, to get the link to the appropriate version.
+- For example, for Ubuntu 20.04 "local install" use <https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_local>
+- This online tool also provides specialized installation instructions for your choices.
+- For example, the provided instructions to install CUDA 12 on Ubuntu 20.04 x86_64:
 
 ```
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
-
-sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
-
-wget https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda-repo-ubuntu1804-11-2-local_11.2.2-460.32.03-1_amd64.deb
-
-sudo dpkg -i cuda-repo-ubuntu1804-11-2-local_11.2.2-460.32.03-1_amd64.deb
-
-sudo apt-key add /var/cuda-repo-ubuntu1804-11-2-local/7fa2af80.pub
-
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget https://developer.download.nvidia.com/compute/cuda/12.2.2/local_installers/cuda-repo-ubuntu2004-12-2-local_12.2.2-535.104.05-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu2004-12-2-local_12.2.2-535.104.05-1_amd64.deb
+sudo cp /var/cuda-repo-ubuntu2004-12-2-local/cuda-*-keyring.gpg /usr/share/keyrings/
 sudo apt-get update
-
 sudo apt-get -y install cuda
 ```
 
@@ -37,25 +28,17 @@ sudo apt-get -y install cuda
 - In most cases the following will suffice:
     1. Add the following line to the end of the `~/.bashrc` file:
     ```
-    export PATH=/usr/local/cuda-11.2/bin${PATH:+:${PATH}}
+    export PATH=/usr/local/cuda-12.2/bin${PATH:+:${PATH}}
     ```
-    2. Remove any other CUDA related lines from `~/.bashrc`, for example, those left over from previous installations of CUDA 10, etc. These could be changes to `PATH` or `LD_LIBRARY_PATH`.
+    2. Remove any other CUDA related lines from `~/.bashrc`, for example, those left over from previous installations of CUDA 10, 11, etc. These could be changes to `PATH` or `LD_LIBRARY_PATH`.
 
-## 3. Install NVIDIA CUDA Toolkit:
-
-This actually replaces the previously installed `cuda` (as of 2022-11-24). So, I don't think it this step is actually needed...
-
-```
-sudo apt install nvidia-cuda-toolkit
-```
-
-### 4. Verify installation of NVIDIA drivers, CUDA, and CUDA Toolkit
+### 3. Verify installation of NVIDIA drivers, CUDA, and CUDA Toolkit
 
 - Driver: check the output of `cat /proc/driver/nvidia/version`
 - CUDA: check `nvcc -V` or `cat /usr/local/cuda/version.json`
 - CUDA Toolkit: see the output of `dpkg -l | grep cuda-toolkit`
 
-### 5. Install CUDNN
+### 4. Install CUDNN
 
 - Easiest way seems to be: <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#package-manager-ubuntu-install>
 - Alternative way is to download "cuDNN Library for Linux (x86_64)": <https://developer.nvidia.com/rdp/form/cudnn-download-survey>. And then following the procedure at <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-tar>.
