@@ -40,9 +40,6 @@ sudo apt-get -y install cuda
 
 ### 4. Install CUDNN
 
-- Easiest way seems to be: <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#package-manager-ubuntu-install>
-- Alternative way is to download "cuDNN Library for Linux (x86_64)": <https://developer.nvidia.com/rdp/form/cudnn-download-survey>. And then following the procedure at <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-tar>.
-
-## Other resources
-
-- Some helpful info (but some outdated) here: <https://medium.com/analytics-vidhya/installing-tensorflow-with-cuda-cudnn-gpu-support-on-ubuntu-20-04-f6f67745750a>
+- Follow the instructions at <https://docs.nvidia.com/deeplearning/cudnn/install-guide/>. Perhaps it's best to use the same installation method as used for CUDA previously ("local", "network", etc.).
+- When this method is appropriate, the easiest way seems to be the "network" install for Ubuntu/Debian: <https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#package-manager-ubuntu-install>
+- Alternative way is to download "cuDNN Library for Linux (x86_64)": <https://developer.nvidia.com/rdp/form/cudnn-download-survey>. And then following the respective procedure at <https://docs.nvidia.com/deeplearning/cudnn/install-guide/>.
