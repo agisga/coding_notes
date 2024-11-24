@@ -1,3 +1,21 @@
+# OneNote
+
+## Useful keyboard shortcuts
+- Use Alt-Shift-D to insert current date (for the title of the daily note -- jump to the title with Ctrl-Shift-T).
+- Use Alt-Shift-F to insert current date and time.
+- Use Ctrl-Alt-D to dock the OneNote window.
+- Take a screenshot with Windows+Shift+S. Then insert it with Ctrl+V or with Shift+Insert.
+- Page navigation: Ctrl-PageUp/Down, Alt-PageUp/Down, Alt-Home/End
+- Navigate tabs: Ctrl-Tab, Ctrl-Shift-Tab
+- Back/forward: Alt-Left/Right
+- Switch notebook: Ctrl-G
+- Global search: Ctrl-E (change scope with Tab, then Space).
+- Merge containers: Hold down SHIFT. Click the move handle of the first note container, and then drag it over any other note container on the same page. When the contents of the note containers are merged, release the SHIFT key.
+- Increase/Decrease indent level of the current page: Ctrl-Alt-[ or ]
+- Win-shift-N: opens OneNote or switches to an open OneNote window
+- Apply, mark, or clear To Do tag (i.e., a simple checkbox): Ctrl-1
+- Re-order checkboxes, list items etc.: Shift-Alt-Up/Down
+
 # Blog article: GTD and InBox Zero with Microsoft Outlook - Simon Angling
 
 <https://simonangling.com/gtd-and-inbox-zero-with-outlook/>
